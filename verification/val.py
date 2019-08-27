@@ -42,13 +42,13 @@ def stripper(file_list):
 def get_files(folder,extension=''):
     return glob(folder+'*'+extension)
 
-def draw_answer(file_label_pair,input_folder,output_folder,number):
+def draw_answer(file_label_pair,input_folder,output_folder,number,config_folder):
     text_file, img_name = file_label_pair
     img = Image.open(input_folder+img_name)
-    text = fakenbullshet(input_folder+text_file)
+    text = fakenbullshet(config_folder+text_file)
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype('Consolas-Bold.ttf',size=36)
-    draw.text((0, number),text,(255,255,255),font=font)
+    draw.text((0,36*number),text,(255,0,0),font=font)
     img.save(output_folder+img_name)
 
 
@@ -76,8 +76,23 @@ def izip_pngs(unique_names,file_names,extension):
 def draw_many(files_list,input_folder,output_folder):
     index = 0
     last_name = ''
+
     for file in files_list:
-        draw_answer(file,input_folder,output_folder,index)
+
+        if file[1] == last_name:
+            index += 1
+            print('names match')
+        else:
+            print('ARGH!')
+            #print(file, ' ',last_name)
+            index = 0
+
+        if index > 0:
+            draw_answer(file,output_folder,output_folder,index,input_folder)
+        else:
+            draw_answer(file,input_folder,output_folder,index,input_folder)
+
+        last_name = file[1]
 
 
 
