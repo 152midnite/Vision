@@ -48,7 +48,7 @@ def draw_answer(file_label_pair,input_folder,output_folder,number):
     text = fakenbullshet(input_folder+text_file)
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype('Consolas-Bold.ttf',size=36)
-    draw.text((0, 36*number),text,(255,255,255),font=font)
+    draw.text((0, number),text,(255,255,255),font=font)
     img.save(output_folder+img_name)
 
 
