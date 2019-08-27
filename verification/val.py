@@ -42,14 +42,14 @@ def stripper(file_list):
 def get_files(folder,extension=''):
     return glob(folder+'*'+extension)
 
-def draw_answer(file_label_pair,dir,number):
-    img_name, text_file = file_label_pair
-    img = Image.open(dir+img_name)
-    text = fakenbullshet(dir+text_file)
+def draw_answer(file_label_pair,input_folder,output_folder,number):
+    text_file, img_name = file_label_pair
+    img = Image.open(input_folder+img_name)
+    text = fakenbullshet(input_folder+text_file)
     draw = ImageDraw.Draw(img)
-    ont = ImageFont.truetype('Consolas-Bold.ttf',size=36)
+    font = ImageFont.truetype('Consolas-Bold.ttf',size=36)
     draw.text((0, 36*number),text,(255,255,255),font=font)
-    img.save(img_name)
+    img.save(output_folder+img_name)
 
 
 
@@ -58,16 +58,26 @@ def get_unique(stripped_files):
     names_list = [re.findall(reg,name)[0][0] for name in stripped_files if re.findall(reg,name)]
     return sorted(set(names_list))
 
-def izip_pngs(unique_names,file_names):
+def izip_pngs(unique_names,file_names,extension):
     indx = 0
+    stop = len(file_names)
+    results = []
     for name in unique_names:
         length = len(name)
         while file_names[indx][:length]==name:
             length = len(name)
             indx+=1
-            print(file_names[indx],indx)
-        exit()
+            if indx >= stop:
+                break
+            if file_names[indx][-7:-4] == 'str':
+                results.append((file_names[indx],name[:-1]+extension))
+    return results
 
+def draw_many(files_list,input_folder,output_folder):
+    index = 0
+    last_name = ''
+    for file in files_list:
+        draw_answer(file,input_folder,output_folder,index)
 
 
 
@@ -77,7 +87,9 @@ x = stripper(get_files(folder))
 x.sort()
 sorted_names = get_unique(x)
 
-izip_pngs(sorted_names,x)
 
+
+sets = izip_pngs(sorted_names,x,'.jpg')
+draw_many(sets,'./original_images/','./output_drawing/')
 
 
